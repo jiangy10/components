@@ -10,12 +10,17 @@
 </head>
 <body>
   <div id="demo"></div>
+
   <script type="module">
     import { html, render } from 'lit';
-    import '../dist/src/MovingEye.js';
+    import '../dist/src/log-in.js';
+
+    const header = 'Hello owc World!';
     render(
       html`
-          <semi-circle></semi-circle>
+        <log-in .header=${header}>
+          some light-dom
+        </log-in>
       `,
       document.querySelector('#demo')
     );

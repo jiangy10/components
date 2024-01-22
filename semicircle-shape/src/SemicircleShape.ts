@@ -1,6 +1,55 @@
 import {html, css, LitElement} from 'lit';
-import {customElement, property, state} from 'lit/decorators.js';
-import {animate} from '@lit-labs/motion';
+import {customElement, state} from 'lit/decorators.js';
+
+@customElement('semicircle-shape')
+export class SemicircleShape extends LitElement {
+	//height adjustment
+	@state() dh: number = 0;
+	@state() ds: number = 0;
+
+	static styles = css`
+    #semicircle {
+      position: relative;
+      left: 200px;
+      top: 200px;
+      width: 150px;
+      height: 80px;
+      border-top-left-radius: 100px;
+      border-top-right-radius: 100px;
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
+      background-color: orange;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .face {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-evenly;
+      align-items: center;
+      width: 120px;
+      height: 40px;
+    }
+  `;
+
+	render() {
+		return html`
+      <div id="semicircle">
+        <div class="face">
+          <moving-eye></moving-eye>
+          <moving-eye></moving-eye>
+        </div>
+        <div style="width:120px;display:flex;align-items: center; justify-content: center">
+          <moving-mouse></moving-mouse>
+        </div>
+
+      </div>`;
+	}
+}
 
 @customElement('moving-eye')
 export class MovingEye extends LitElement {
@@ -60,11 +109,17 @@ export class MovingEye extends LitElement {
 @customElement('moving-mouse')
 export class MovingMouse extends LitElement {
 
-  @state() dx = 0
-  @state() dy = 0
+  @state() dx: number = 0;
+  @state() dy: number = 0;
+
   constructor() {
     super();
     document.addEventListener('mousemove', event => this.moveMouse(event));
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    document.removeEventListener('mousemove', this.moveMouse);
   }
 
   static styles = css`
@@ -91,7 +146,7 @@ export class MovingMouse extends LitElement {
       //look at mouse
       if (distance > 5) {
         this.dx = (event.clientX - mousePosition.x) * (8 / distance);
-        this.dy = Math.min(0,(event.clientY - mousePosition.y) * (8 / distance));
+        this.dy = Math.min(0, (event.clientY - mousePosition.y) * (8 / distance));
       }
       //back to origin
       else {
@@ -102,70 +157,5 @@ export class MovingMouse extends LitElement {
   }
 }
 
-@customElement('semi-circle')
-export class SemiCircle extends LitElement {
-  //height adjustment
-  @state() dh: number = 0;
 
-  static styles = css`
-    #semicircle {
-      position: relative;
-      left: 200px;
-      top: 200px;
-      width: 150px;
-      height: 80px;
-      border-top-left-radius: 100px;
-      border-top-right-radius: 100px;
-      border-bottom-left-radius: 10px;
-      border-bottom-right-radius: 10px;
-      background-color: orange;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      //transform: skewX(-10deg);
-    }
 
-    #face {
-      position: relative;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-evenly;
-      align-items: center;
-      width: 120px;
-      height: 40px;
-    }
-  `;
-
-  constructor() {
-    super();
-    document.addEventListener('mousemove', event => this.moveBody(event));
-  }
-
-  render() {
-    return html`
-        <div id="semicircle">
-            <div id="face">
-                <moving-eye></moving-eye>
-                <moving-eye></moving-eye>
-            </div>
-            <div style="width:120px;display:flex;align-items: center; justify-content: center">
-                <moving-mouse></moving-mouse>
-            </div>
-
-        </div>`;
-  }
-
-  moveBody(event: MouseEvent): void {
-    const body: Element | null | undefined = this.shadowRoot?.querySelector('#semi-circle');
-    if (body) {
-      const bodyPosition = body.getBoundingClientRect();
-      //mouse is above the body
-      if (event.clientY < bodyPosition.y) {
-        this.dh = (bodyPosition.y - event.clientY) / 20;
-      } else {
-        this.dh = 0;
-      }
-    }
-  }
-}

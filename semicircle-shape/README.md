@@ -1,21 +1,21 @@
-# \<moving-eye>
+# \<semicircle-shape>
 
 This webcomponent follows the [open-wc](https://github.com/open-wc/open-wc) recommendation.
 
 ## Installation
 
 ```bash
-npm i moving-eye
+npm i semicircle-shape
 ```
 
 ## Usage
 
 ```html
 <script type="module">
-  import 'moving-eye/moving-eye.js';
+  import 'semicircle-shape/semicircle-shape.js';
 </script>
 
-<moving-eye></moving-eye>
+<semicircle-shape></semicircle-shape>
 ```
 
 
